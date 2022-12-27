@@ -4,8 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PelangganController;
-use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\PublicApiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\MerekController;
 use App\Http\Controllers\QuotationController;
@@ -39,51 +40,26 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
-//Pelanggan controller
-Route::get('/pelanggan', [PelangganController::class, 'index']);
-Route::post('/tambah-pelanggan', [PelangganController::class, 'store']);
-Route::get('/edit-pelanggan/{PelangganId}', [PelangganController::class, 'show']);
-Route::put('/edit-pelanggan/{PelangganId}', [PelangganController::class, 'update']);
-Route::delete('/delete-pelanggan/{PelangganId}', [PelangganController::class, 'destroy']);
+// Client front controller
+Route::group(['middleware' => 'api-key'], function(){
+    Route::get('/client/customer', [PublicApiController::class, 'index']);
+    Route::get('/client/customer/mypath', [PublicApiController::class, 'show']);
+    Route::post('/client/customer/wishes', [PublicApiController::class, 'store']);
+    Route::get('/client/customer/wishes', [PublicApiController::class, 'showWishbyCus']);
+}); 
 
-//Kategori controller
-Route::get('/kategori', [KategoriController::class, 'index']);
-Route::post('/tambah-kategori', [KategoriController::class, 'store']);
-Route::get('/edit-kategori/{KategoriId}', [KategoriController::class, 'show']);
-Route::put('/edit-kategori/{KategoriId}', [KategoriController::class, 'update']);
-Route::delete('/delete-kategori/{KategoriId}', [KategoriController::class, 'destroy']);
 
-//Produk controller
-Route::get('/produk', [ProdukController::class, 'index']);
-Route::post('/tambah-produk', [ProdukController::class, 'store']);
-Route::get('/edit-produk/{ProdukId}', [ProdukController::class, 'show']);
-Route::put('/edit-produk/{ProdukId}', [ProdukController::class, 'update']);
-Route::delete('/delete-produk/{ProdukId}', [ProdukController::class, 'destroy']);
+//Customer controller
+Route::get('/customer', [CustomerController::class, 'index']);
+Route::post('/add-customer', [CustomerController::class, 'store']);
+Route::get('/edit-customer/{CustomerId}', [CustomerController::class, 'show']);
+Route::put('/edit-customer/{CustomerId}', [CustomerController::class, 'update']);
+Route::delete('/delete-customer/{CustomerId}', [CustomerController::class, 'destroy']);
 
-//Merek controller
-Route::get('/merek', [MerekController::class, 'index']);
-Route::post('/tambah-merek', [MerekController::class, 'store']);
-Route::get('/edit-merek/{MerekkId}', [MerekController::class, 'show']);
-Route::put('/edit-merek/{MerekId}', [MerekController::class, 'update']);
-Route::delete('/delete-merek/{MerekId}', [MerekController::class, 'destroy']);
+//Theme controller
+Route::get('/theme', [ThemeController::class, 'index']);
+Route::post('/add-theme', [ThemeController::class, 'store']);
+Route::get('/show-theme/{ThemeId}', [ThemeController::class, 'show']);
+Route::put('/edit-theme/{ThemeId}', [ThemeController::class, 'update']);
+Route::delete('/delete-theme/{ThemeId}', [ThemeController::class, 'destroy']);
 
-//Quotation controller
-Route::get('/quo-draft', [QuotationController::class, 'QuoDraft']);
-Route::get('/data-quo', [QuotationController::class, 'QuoData']);
-Route::post('/tambah-quo-draft', [QuotationController::class, 'DraftStore']);
-Route::post('/tambah-quo-saved', [QuotationController::class, 'SavedStore']);
-Route::get('/detail-quo/{QuoId}', [QuotationController::class, 'show']);
-Route::put('/edit-quo/{QuoId}', [QuotationController::class, 'update']);
-Route::put('/sent-quo/{QuoId}', [QuotationController::class, 'sent']);
-Route::delete('/delete-quo/{QuoId}', [QuotationController::class, 'destroy']);
-
-//Inovices controller
-Route::get('/inv-draft', [InvoicesController::class, 'InvDraft']);
-// Route::get('/data-quo', [QuotationController::class, 'QuoData']);
-Route::post('/tambah-inv-draft', [InvoicesController::class, 'DraftStore']);
-Route::post('/tambah-inv-saved', [InvoicesController::class, 'SavedStore']);
-Route::get('/detail-inv/{InvId}', [InvoicesController::class, 'show']);
-Route::put('/edit-inv/{InvId}', [InvoicesController::class, 'update']);
-Route::put('/sent-inv/{InvId}', [InvoicesController::class, 'sent']);
-Route::put('/payment-inv/{InvId}', [InvoicesController::class, 'payment']);
-Route::delete('/delete-inv/{InvId}', [InvoicesController::class, 'destroy']);

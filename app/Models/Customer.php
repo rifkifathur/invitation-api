@@ -37,4 +37,19 @@ class Customer extends Model
     {
         return $this->hasMany(Wishes::class);
     }
+
+    public function stories()
+    {
+        return $this->hasMany(Stories::class);
+    }
+
+    public function bank()
+    {
+        return $this->belongsTo(Bank::class, 'man_bank_id');
+    }
+    
+    public function bank2()
+    {
+        return $this->belongsTo(Bank::class, 'woman_bank_id');
+    }
 }

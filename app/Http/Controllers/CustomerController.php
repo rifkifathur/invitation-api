@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Theme;
 use App\Models\Gallery;
+use App\Models\Stories;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
 
 class CustomerController extends Controller
 {
@@ -16,7 +18,7 @@ class CustomerController extends Controller
     }
 
     public function index(){
-        $data = Customer::with(['theme', 'gallery'])->get();
+        $data = Customer::with(['theme', 'gallery', 'stories', 'bank'])->get();
         return response()->json([
             'code' => '200',
             'status' => 'OK',
@@ -71,6 +73,9 @@ class CustomerController extends Controller
                 $customer->woman_img = $files->store($request->input('path'));
             }
 
+            $stories = new Stories;
+            dd($request->input('stories'));
+
             $gallery = new Gallery;
             if ($files = $request->file('gallery')) {
                 foreach ($files as $file) {
@@ -81,15 +86,15 @@ class CustomerController extends Controller
                 }
             }
 
-            $customer->save();  
-            //return response JSON Customer is created
-            if($customer) {
-                return response()->json([
-                    'code' => '201',
-                    'status' => 'OK',
-                    'data'    => $this->refactorVar($customer->load('theme')),  
-                ], 201);
-            }
+            // $customer->save();  
+            // //return response JSON Customer is created
+            // if($customer) {
+            //     return response()->json([
+            //         'code' => '201',
+            //         'status' => 'OK',
+            //         'data'    => $this->refactorVar($customer->load('theme')),  
+            //     ], 201);
+            // }
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
@@ -120,7 +125,7 @@ class CustomerController extends Controller
 
             //update
             $customer = Customer::find($CustomerId)->first();
-            $customer->id = $request->input('id');
+            $gallery = new Gallery;
             $customer->fullname_man = $request->input('manFullName');
             $customer->callname_man = $request->input('manCallName');
             $customer->fathername_man = $request->input('manFatherName');
@@ -135,9 +140,51 @@ class CustomerController extends Controller
             $customer->resepsi_address = $request->input('resepsiAddress');
             $customer->path = $request->input('path');
             $customer->theme_id = $request->input('theme');
-            $customer->update();
+            $ubah = false;
+            if ($files = $request->file('coupleImg')) {
+                $ubah = true;
+            }
+            if ($ubah){
+                Storage::delete($customer->couple_img);
+                $customer->couple_img = $files->store($request->input('path'));
+            }
+            if ($files = $request->file('manImg')) {
+                $ubah = true;
+            }
+            if ($ubah){
+                Storage::delete($customer->man_img);
+                $customer->man_img = $files->store($request->input('path'));
+            }
+            if ($files = $request->file('womanImg')) {
+                $ubah = true;
+            }
+            if($ubah){
+                Storage::delete($customer->woman_img);
+                $customer->woman_img = $files->store($request->input('path'));
+            }
 
-            //return response JSON Customer is created
+            if ($files = $request->file('gallery')) {
+                $ubah = true;
+            }
+            if($ubah){
+                $fingGallery = $gallery::where('customer_id', $CustomerId->id)->get();
+                foreach ($fingGallery as $key => $v) {
+                    Storage::delete($v->img);
+                }
+                $gallery::where('customer_id', $CustomerId->id)->delete();
+            }
+            if($ubah){
+                foreach ($request->file('gallery') as $file) {
+                    $gallery::insert([
+                        'img' => $file->store($request->input('path')),
+                        'customer_id' => $CustomerId->id
+                    ]);
+                    // echo $file->store($request->input('path'));
+                }
+            }
+            
+            $customer->update();
+            // return response JSON Customer is created
             if($customer) {
                 return response()->json([
                     'code' => '201',

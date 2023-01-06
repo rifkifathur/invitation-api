@@ -14,10 +14,10 @@ class Controller extends BaseController
         if(isset($data[0]['id'])){
             foreach ($data as $key => $value) {
                 
-                $tempGallery = array();
-                foreach ($value["gallery"] as $valueG) {
-                    $tempGallery[] = $valueG->img;
-                }
+                // $tempGallery = array();
+                // foreach ($value["gallery"] as $valueG) {
+                //     $tempGallery[] = $valueG->img;
+                // }
 
                 $newData[] = [
                     "id" => $value['id'],
@@ -42,17 +42,23 @@ class Controller extends BaseController
                     "resepsiAddressLink" => $value["link_resepsi_address"],
                     "path" => $value["path"],
                     "theme" => $value["theme"],
-                    "gallery" => $tempGallery
+                    // "gallery" => $tempGallery
+                    "gallery" => $value["gallery"],
+                    "stories" => $value["stories"],
+                    "manBank" => $value["bank"],
+                    "manRek" => $value["man_rek"],
+                    "womanBank" => $value["bank2"],
+                    "womanRek" => $value["woman_rek"],
                 ];
             }
 
             return $newData;
 
         } else {
-            $tempGallery = array();
-                foreach ($data["gallery"] as $value) {
-                    $tempGallery[] = $value->img;
-                }
+            // $tempGallery = array();
+            //     foreach ($data["gallery"] as $value) {
+            //         $tempGallery[] = $value->img;
+            //     }
             $newData = [
                     "id" => $data['id'],
                     "coupleImg" => $data["couple_img"],
@@ -76,7 +82,13 @@ class Controller extends BaseController
                     "resepsiAddressLink" => $data["link_resepsi_address"],
                     "path" => $data["path"],
                     "theme" => $data["theme"],
-                    "gallery" => $tempGallery
+                    // "gallery" => $tempGallery
+                    "gallery" => $data["gallery"],
+                    "stories" => $data["stories"],
+                    "manBank" => $data["bank"],
+                    "manRek" => $data["man_rek"],
+                    "womanBank" => $data["bank2"],
+                    "womanRek" => $data["woman_rek"],
             ];
 
             return $newData;

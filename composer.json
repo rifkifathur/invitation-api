@@ -11,6 +11,8 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
+        "laravel/ui": "3.*",
+        "twbs/bootstrap-icons": "^1.10",
         "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {

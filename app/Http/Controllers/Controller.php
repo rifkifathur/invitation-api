@@ -49,6 +49,7 @@ class Controller extends BaseController
                     "manRek" => $value["man_rek"],
                     "womanBank" => $value["bank2"],
                     "womanRek" => $value["woman_rek"],
+                    "song" => $value["song"],
                 ];
             }
 
@@ -89,6 +90,7 @@ class Controller extends BaseController
                     "manRek" => $data["man_rek"],
                     "womanBank" => $data["bank2"],
                     "womanRek" => $data["woman_rek"],
+                    "song" => $data["song"],
             ];
 
             return $newData;
